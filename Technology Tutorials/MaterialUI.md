@@ -332,6 +332,94 @@ export default function Demo() {
 
 
 
+## Styling
+
+Material-UI uses a CSS-in-JS solution, which essentially generate CSS file dynamically at run time according to the declaration in the JS script. Under the hood, it uses a library called JSS. Thus, to understand how to style in Material-UI, it is necessary to understand how JSS works. 
+
+
+
+### JSS
+
+JSS uses a "style object" to describe the style of HTML elements. The syntax of JSS can be found here:
+
+https://cssinjs.org/jss-syntax?v=v10.0.0-alpha.9
+
+Usage in React is as follows:
+
+```jsx
+// Source
+
+import React from 'react'
+import {render} from 'react-dom'
+import {createUseStyles} from 'react-jss'
+
+// Create your Styles. Remember, since React-JSS uses the default preset,
+// most plugins are available without further configuration needed.
+const useStyles = createUseStyles({
+  myButton: {
+    color: 'green',
+    margin: {
+      // jss-plugin-expand gives more readable syntax
+      top: 5, // jss-plugin-default-unit makes this 5px
+      right: 0,
+      bottom: 0,
+      left: '1rem'
+    },
+    '& span': {
+      // jss-plugin-nested applies this to a child span
+      fontWeight: 'bold' // jss-plugin-camel-case turns this into 'font-weight'
+    }
+  },
+  myLabel: {
+    fontStyle: 'italic'
+  }
+})
+
+// Define the component using these styles and pass it the 'classes' prop.
+// Use this to assign scoped class names.
+const Button = ({children}) => {
+  const classes = useStyles()
+  return (
+    <button className={classes.myButton}>
+      <span className={classes.myLabel}>{children}</span>
+    </button>
+  )
+}
+
+const App = () => <Button>Submit</Button>
+
+render(<App />, document.getElementById('root'))
+```
+
+```html
+<----!>Compiled HTML</----!>
+
+<div id="root">
+  <button class="Button-myButton-1-25">
+    <span class="Button-myLabel-1-26">
+      Submit
+    </span>
+  </button>
+</div>
+```
+
+```css
+# Compiled CSS
+
+.Button-myButton-1-25 {
+  color: green;
+  margin: 5px 0 0 1rem;
+}
+.Button-myButton-1-25 span {
+  font-weight: bold;
+}
+.Button-myLabel-1-26 {
+  font-style: italic;
+}
+```
+
+
+
 
 
 ## Usage
